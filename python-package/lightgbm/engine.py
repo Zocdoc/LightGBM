@@ -101,8 +101,8 @@ def train(params, train_set, num_boost_round=100,
     evals_result: dict or None, optional (default=None)
         This dictionary used to store all evaluation results of all the items in ``valid_sets``.
 
-        Example
-        -------
+        .. rubric:: Example
+
         With a ``valid_sets`` = [valid_set, train_set],
         ``valid_names`` = ['eval', 'train']
         and a ``params`` = {'metric': 'logloss'}
@@ -115,8 +115,8 @@ def train(params, train_set, num_boost_round=100,
         If int, the eval metric on the valid set is printed at every ``verbose_eval`` boosting stage.
         The last boosting stage or the boosting stage found by using ``early_stopping_rounds`` is also printed.
 
-        Example
-        -------
+        .. rubric:: Example
+
         With ``verbose_eval`` = 4 and at least one item in ``valid_sets``,
         an evaluation metric is printed every 4 (instead of 1) boosting stages.
 
@@ -147,7 +147,7 @@ def train(params, train_set, num_boost_round=100,
             num_boost_round = params.pop(alias)
             warnings.warn("Found `{}` in params. Will use it instead of argument".format(alias))
             break
-    for alias in ["early_stopping_round", "early_stopping_rounds", "early_stopping"]:
+    for alias in ["early_stopping_round", "early_stopping_rounds", "early_stopping", "n_iter_no_change"]:
         if alias in params:
             early_stopping_rounds = params.pop(alias)
             warnings.warn("Found `{}` in params. Will use it instead of argument".format(alias))
@@ -308,17 +308,17 @@ def _make_n_folds(full_data, folds, nfold, params, seed, fpreproc=None, stratifi
         if hasattr(folds, 'split'):
             group_info = full_data.get_group()
             if group_info is not None:
-                group_info = np.array(group_info, dtype=int)
+                group_info = np.array(group_info, dtype=np.int32, copy=False)
                 flatted_group = np.repeat(range_(len(group_info)), repeats=group_info)
             else:
-                flatted_group = np.zeros(num_data, dtype=int)
+                flatted_group = np.zeros(num_data, dtype=np.int32)
             folds = folds.split(X=np.zeros(num_data), y=full_data.get_label(), groups=flatted_group)
     else:
         if 'objective' in params and params['objective'] == 'lambdarank':
             if not SKLEARN_INSTALLED:
                 raise LightGBMError('Scikit-learn is required for lambdarank cv.')
             # lambdarank task, split according to groups
-            group_info = np.array(full_data.get_group(), dtype=int)
+            group_info = np.array(full_data.get_group(), dtype=np.int32, copy=False)
             flatted_group = np.repeat(range_(len(group_info)), repeats=group_info)
             group_kfold = _LGBMGroupKFold(n_splits=nfold)
             folds = group_kfold.split(X=np.zeros(num_data), groups=flatted_group)
@@ -502,7 +502,7 @@ def cv(params, train_set, num_boost_round=100,
             warnings.warn("Found `{}` in params. Will use it instead of argument".format(alias))
             num_boost_round = params.pop(alias)
             break
-    for alias in ["early_stopping_round", "early_stopping_rounds", "early_stopping"]:
+    for alias in ["early_stopping_round", "early_stopping_rounds", "early_stopping", "n_iter_no_change"]:
         if alias in params:
             warnings.warn("Found `{}` in params. Will use it instead of argument".format(alias))
             early_stopping_rounds = params.pop(alias)

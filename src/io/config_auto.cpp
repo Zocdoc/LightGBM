@@ -72,6 +72,7 @@ std::unordered_map<std::string, std::string> Config::alias_table({
   {"colsample_bynode", "feature_fraction_bynode"},
   {"early_stopping_rounds", "early_stopping_round"},
   {"early_stopping", "early_stopping_round"},
+  {"n_iter_no_change", "early_stopping_round"},
   {"max_tree_output", "max_delta_step"},
   {"max_leaf_output", "max_delta_step"},
   {"reg_alpha", "lambda_l1"},
@@ -214,6 +215,7 @@ std::unordered_set<std::string> Config::parameter_set({
   "monotone_constraints",
   "feature_contri",
   "forcedsplits_filename",
+  "forcedbins_filename",
   "refit_decay_rate",
   "cegb_tradeoff",
   "cegb_penalty_split",
@@ -405,6 +407,8 @@ void Config::GetMembersFromString(const std::unordered_map<std::string, std::str
 
   GetString(params, "forcedsplits_filename", &forcedsplits_filename);
 
+  GetString(params, "forcedbins_filename", &forcedbins_filename);
+
   GetDouble(params, "refit_decay_rate", &refit_decay_rate);
   CHECK(refit_decay_rate >=0.0);
   CHECK(refit_decay_rate <=1.0);
@@ -575,7 +579,6 @@ void Config::GetMembersFromString(const std::unordered_map<std::string, std::str
   GetInt(params, "gpu_device_id", &gpu_device_id);
 
   GetBool(params, "gpu_use_dp", &gpu_use_dp);
-
 }
 
 std::string Config::SaveMembersToString() const {
@@ -620,6 +623,7 @@ std::string Config::SaveMembersToString() const {
   str_buf << "[monotone_constraints: " << Common::Join(Common::ArrayCast<int8_t, int>(monotone_constraints), ",") << "]\n";
   str_buf << "[feature_contri: " << Common::Join(feature_contri, ",") << "]\n";
   str_buf << "[forcedsplits_filename: " << forcedsplits_filename << "]\n";
+  str_buf << "[forcedbins_filename: " << forcedbins_filename << "]\n";
   str_buf << "[refit_decay_rate: " << refit_decay_rate << "]\n";
   str_buf << "[cegb_tradeoff: " << cegb_tradeoff << "]\n";
   str_buf << "[cegb_penalty_split: " << cegb_penalty_split << "]\n";

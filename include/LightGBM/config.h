@@ -75,7 +75,7 @@ struct Config {
     const std::unordered_map<std::string, std::string>& params,
     const std::string& name, bool* out);
 
-  static void KV2Map(std::unordered_map<std::string, std::string>& params, const char* kv);
+  static void KV2Map(std::unordered_map<std::string, std::string>* params, const char* kv);
   static std::unordered_map<std::string, std::string> Str2Map(const char* parameters);
 
   #pragma region Parameters
@@ -289,7 +289,7 @@ struct Config {
   // desc = random seed for ``feature_fraction``
   int feature_fraction_seed = 2;
 
-  // alias = early_stopping_rounds, early_stopping
+  // alias = early_stopping_rounds, early_stopping, n_iter_no_change
   // desc = will stop training if one metric of one validation data doesn't improve in last ``early_stopping_round`` rounds
   // desc = ``<= 0`` means disable
   int early_stopping_round = 0;
@@ -411,6 +411,11 @@ struct Config {
   // desc = **Note**: the forced split logic will be ignored, if the split makes gain worse
   // desc = see `this file <https://github.com/microsoft/LightGBM/tree/master/examples/binary_classification/forced_splits.json>`__ as an example
   std::string forcedsplits_filename = "";
+
+  // desc = path to a ``.json`` file that specifies bin upper bounds for some or all features
+  // desc = ``.json`` file should contain an array of objects, each containing the word ``feature`` (integer feature index) and ``bin_upper_bound`` (array of thresholds for binning)
+  // desc = see `this file <https://github.com/microsoft/LightGBM/tree/master/examples/regression/forced_bins.json>`__ as an example
+  std::string forcedbins_filename = "";
 
   // check = >=0.0
   // check = <=1.0
