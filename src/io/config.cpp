@@ -318,6 +318,9 @@ void Config::CheckParamConflict() {
       histogram_pool_size = -1;
     }
   }
+
+  Log::Warning("histogram_pool_size: %f", histogram_pool_size);
+
   // Check max_depth and num_leaves
   if (max_depth > 0) {
     double full_num_leaves = std::pow(2, max_depth);

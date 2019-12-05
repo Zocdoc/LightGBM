@@ -203,6 +203,17 @@
 
     return ret;
   }
+
+  static double *new_doubleArray_2(int64_t nelements) {
+    return new double[nelements]();
+  }
+
+  static double doubleArray_getitem_2(double *ary, int64_t index) {
+      return ary[index];
+  }
+  static void doubleArray_setitem_2(double *ary, int64_t index, double value) {
+      ary[index] = value;
+  }
 %}
 
 %pointer_functions(int, intp)
